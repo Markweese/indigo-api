@@ -1,6 +1,6 @@
 import pandas
 
-df = pandas.read_csv('../data/usda_crops_5yr.csv')
+df = pandas.read_csv('data/usda_crops_5yr.csv')
 
 class crop_module:
     # Init
