@@ -14,7 +14,13 @@ class crop_module:
          return selection.to_json(orient='records')
 
     # get_county
-    # id: takes FIPS_CODE
+    # id: takes STATE_CODE
     def get_state(self, code):
          selection = df.loc[df['STATE_CODE'] == code.upper()]
+         return selection.to_json(orient='records')
+
+    # get_crop
+    # id: takes CROP
+    def get_crop(self, name):
+         selection = df.loc[df['CROP'] == name.upper()]
          return selection.to_json(orient='records')
