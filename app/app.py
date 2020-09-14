@@ -1,6 +1,6 @@
 import json
 import flask
-from crop_module import crop_module
+from app.crop_module import crop_module
 from flask import request, render_template
 
 app = flask.Flask(__name__)
