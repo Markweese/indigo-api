@@ -1,6 +1,6 @@
 import json
 import flask
-from app.crop_module import crop_module
+from crop_module import crop_module
 from flask import request, render_template
 
 app = flask.Flask(__name__)
@@ -12,20 +12,18 @@ crop_module = crop_module()
 def index():
     return render_template("index.html")
 
-# The API
-@app.route('/api/county/<fips>', methods=['GET'])
-def get_county(fips):
-    selection = crop_module.get_county(fips)
-    return selection
-
 @app.route('/api/state/<code>', methods=['GET'])
 def get_state(code):
-    selection = crop_module.get_state(code)
+    formatted = request.args.get('formatted')
+    selection = crop_module.get_state(code, formatted)
+
     return selection
 
 @app.route('/api/crop/<name>', methods=['GET'])
-def get_crop_overview(name):
-    selection = crop_module.get_crop(name)
+def get_crop(name):
+    formatted = request.args.get('formatted')
+    selection = crop_module.get_crop(name, formatted)
+
     return selection
 
 if __name__ == '__main__':
