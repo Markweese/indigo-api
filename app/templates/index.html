@@ -29,6 +29,7 @@
       margin-bottom: 5px;
       padding: 5px 10px;
       border-radius: 30px;
+      background-color: white;
       border: 2px solid rgb(116,127,252);
     }
 
@@ -82,12 +83,12 @@
       <p style="font-size: 14px;">*hovering on a state will provide an overview, click on a state will show country breakdowns*</p>
       <div v-if="summary" class="info-box">
         <div v-if="!isNaN(summary.averageYield)">
-          <h3>[[activeCrop]] Yield Summary For [[activeState]]<span v-if="activeYear">([[activeYear]])</span></h3>
+          <h3>[[activeCrop]] | Yield Summary For [[activeState]]<span v-if="activeYear">([[activeYear]])</span></h3>
           <p><strong>Minimum Yield:</strong> [[summary.minYield ? summary.minYield : 0]]</p>
           <p><strong>Average Yield:</strong> [[summary.averageYield]]</p>
           <p><strong>Max Yield:</strong> [[summary.maxYield]]</p>
           <hr/>
-          <h3>[[activeCrop]] Harvested Acres Summary For [[activeState]]<span v-if="activeYear">([[activeYear]])</span></h3>
+          <h3>[[activeCrop]] | Harvested Acres Summary For [[activeState]]<span v-if="activeYear">([[activeYear]])</span></h3>
           <p><strong>Minimum Harvested Acres:</strong> [[summary.minAcres]]</p>
           <p><strong>Average Harvested Acres:</strong> [[summary.averageAcres]]</p>
           <p><strong>Max Harvested Acres:</strong> [[summary.maxAcres]]</p>
