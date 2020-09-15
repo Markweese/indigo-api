@@ -19,10 +19,20 @@ const vue = new Vue({
 
     methods: {
       calculateFill(data) {
+        let numerator;
+        let denominator;
         let timeFrame = this.activeYear ? this.activeYear : 'allTime';
 
-        if (data && data[timeFrame] && data[timeFrame].averageYield) {
-          let percentage = data[timeFrame].averageYield / this.cropSummary.allStates.maxYield;
+        if (this.activeCrop !== 'COTTON' && this.activeCrop !== 'WHEAT') {
+          denominator = 'maxYield';
+          numerator = 'averageYield';
+        } else {
+          numerator = 'maxAcres';
+          denominator = 'averageAcres';
+        }
+
+        if (data && data[timeFrame] && data[timeFrame][numerator]) {
+          let percentage = data[timeFrame][numerator] / this.cropSummary.allStates[denominator];
 
           return `rgba(5,25,255,${percentage})`;
         } else {
