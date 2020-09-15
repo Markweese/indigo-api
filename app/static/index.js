@@ -149,6 +149,14 @@ const vue = new Vue({
 
       toggleMobileDropdown() {
         this.mobileDropdownOpen = !this.mobileDropdownOpen;
+      },
+
+      countyHasCrop(county) {
+        if (this.stateData[county][this.activeCrop] && this.stateData[county][this.activeCrop].length) {
+          return true;
+        } else {
+          return false;
+        }
       }
     }
 })

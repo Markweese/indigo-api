@@ -175,7 +175,7 @@
         </div>
         <button @click="toggleOverviewDropdown" type="dropdown" name="button" aria-role="dropdown" :aria-expanded="overviewDropdownOpen">[[activeCounty ? activeCounty : 'Select A County']] <span v-if="overviewDropdownOpen">▲</span><span v-else>▼</span></button>
         <div class="overview-dropdown" v-if="overviewDropdownOpen">
-          <button v-for="county in Object.keys(stateData)" @click="activateCounty(county)" :class="{'--active':activeCounty === county}" type="button" name="button">[[county]] COUNTY</button>
+          <button v-for="county in Object.keys(stateData)" v-if="countyHasCrop(county)" @click="activateCounty(county)" :class="{'--active':activeCounty === county}" type="button" name="button">[[county]] COUNTY</button>
         </div>
         <div v-for="county in Object.keys(stateData)" v-if="activeCounty === county">
           <h2>[[county]] County</h2>
