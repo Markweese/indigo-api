@@ -13,8 +13,8 @@ const vue = new Vue({
       overviewOpen: false,
       cropFilterOpen: false,
       yearFilterOpen: false,
-      activeStateOverview: null,
       mobileDropdownOpen: false,
+      activeStateOverview: null,
       overviewDropdownOpen: false
     },
 
