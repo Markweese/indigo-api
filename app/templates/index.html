@@ -156,7 +156,7 @@
       <div class="overview-dropdown" v-if="mobileDropdownOpen">
         <button v-for="state in Object.keys(cropSummary)" @click="activateState(state)" :class="{'--active':activeStateOverview === state}" type="button" name="button">[[state]]</button>
       </div>
-      <p style="font-size: 14px;">*hovering over a state to see an overview, click on a state to show county breakdowns*</p>
+      <p style="font-size: 14px;">*hover over a state to see an overview, click on a state to show county breakdowns*</p>
       <div v-if="summary" class="info-box">
         <div v-if="!isNaN(summary.averageYield)">
           <h3>[[activeCrop]] | Yield Summary For [[activeState]]<span v-if="activeYear">([[activeYear]])</span></h3>
