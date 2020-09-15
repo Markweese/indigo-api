@@ -28,14 +28,15 @@ const vue = new Vue({
           denominator = 'maxYield';
           numerator = 'averageYield';
         } else {
-          numerator = 'maxAcres';
-          denominator = 'averageAcres';
+          denominator = 'maxAcres';
+          numerator = 'averageAcres';
         }
 
         if (data && data[timeFrame] && data[timeFrame][numerator]) {
           let percentage = data[timeFrame][numerator] / this.cropSummary.allStates[denominator];
 
-          return `rgba(5,25,255,${percentage})`;
+          // largest max acreage is often far larger, add a bit more color so paths aren't white
+          return `rgba(5,25,255,${denominator === 'maxAcres' ? percentage + .1 : percentage})`;
         } else {
           return `#BFBFBF`;
         }

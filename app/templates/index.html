@@ -144,7 +144,7 @@
       <div v-if="cropFilterOpen">
         <button v-bind:class='{"--active":activeCrop === "CORN"}' v-on:click="getCrop('CORN')" aria-role="button" aria-label="corn" tabindex="0">CORN</button><button v-bind:class='{"--active":activeCrop === "COTTON"}' v-on:click="getCrop('COTTON')" aria-role="button" aria-label="cotton" tabindex="0">COTTON</button><button v-bind:class='{"--active":activeCrop === "RICE"}' v-on:click="getCrop('RICE')" aria-role="button" aria-label="rice" tabindex="0">RICE</button><button v-bind:class='{"--active":activeCrop === "SOYBEANS"}' v-on:click="getCrop('SOYBEANS')" aria-role="button" aria-label="soybeans" tabindex="0">SOYBEANS</button><button v-bind:class='{"--active":activeCrop === "WHEAT"}' v-on:click="getCrop('WHEAT')" aria-role="button" aria-label="wheat" tabindex="0">WHEAT</button>
       </div>
-      <button v-if="activeCrop" style="margin-top: 15px;" aria-label="open year filter" @click="toggleYearFilter()">[[activeYear? `Selected Year: ${activeYear}` : 'Filter By Year']] <span v-if="yearFilterOpen">▲</span><span v-else>▼</span></button>
+      <button v-if="activeCrop && activeCrop !== 'WHEAT' && activeCrop !== 'COTTON'" style="margin-top: 15px;" aria-label="open year filter" @click="toggleYearFilter()">[[activeYear? `Selected Year: ${activeYear}` : 'Filter By Year']] <span v-if="yearFilterOpen">▲</span><span v-else>▼</span></button>
       <div v-if="yearFilterOpen">
         <button v-bind:class='{"--active":activeYear === "2014"}' v-on:click="getYear('2014')" aria-role="button" aria-label="2014" tabindex="0">2014</button>
         <button v-bind:class='{"--active":activeYear === "2015"}' v-on:click="getYear('2015')" aria-role="button" aria-label="2015" tabindex="0">2015</button>
