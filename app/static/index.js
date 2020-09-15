@@ -14,6 +14,7 @@ const vue = new Vue({
       cropFilterOpen: false,
       yearFilterOpen: false,
       activeStateOverview: null,
+      mobileDropdownOpen: false,
       overviewDropdownOpen: false
     },
 
@@ -66,6 +67,7 @@ const vue = new Vue({
         .then(res => {
           this.stateData = res.data;
           this.overviewOpen = true;
+          this.mobileDropdownOpen = false;
           this.activeStateOverview = state;
         })
         .catch(err => {
@@ -143,6 +145,10 @@ const vue = new Vue({
 
       toggleOverviewDropdown() {
         this.overviewDropdownOpen = !this.overviewDropdownOpen;
+      },
+
+      toggleMobileDropdown() {
+        this.mobileDropdownOpen = !this.mobileDropdownOpen;
       }
     }
 })
