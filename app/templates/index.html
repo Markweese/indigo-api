@@ -50,7 +50,6 @@
 
     .filters p {
       font-size: 20px;
-      font-family: sans-serif;
     }
 
     .info-box {
@@ -82,7 +81,6 @@
       display: flex;
       align-items: center;
       flex-direction: row;
-      font-family: sans-serif;
       justify-content: space-between;
     }
 
@@ -99,6 +97,11 @@
       width: 75%;
     }
 
+    .bar-container {
+      overflow: hidden;
+      border: 2px solid rgb(116,127,252);
+    }
+
     .legend {
       display: block;
     }
@@ -107,6 +110,10 @@
       width: 100%;
       display: none;
       margin-top: 10px;
+    }
+
+    body {
+      font-family: sans-serif;
     }
 
     svg {
@@ -187,10 +194,14 @@
               <h3>[[record.YEAR]]</h3>
               <p v-if="record.TOTAL_YIELD">Total Yield: [[record.TOTAL_YIELD]] ([[calculatePercent(record.TOTAL_YIELD, stateData[county][crop], 'TOTAL_YIELD')]] of historic average)</p>
               <p v-else>Total Yield: No Yield Recorded</p>
-              <div v-if="record.TOTAL_YIELD" class="bar" :style="{width:calculateBarWidth(record.TOTAL_YIELD, stateData[county][crop], 'TOTAL_YIELD'), height: '20px', backgroundColor: 'rgb(116,127,252)'}"></div>
+              <div v-if="record.TOTAL_YIELD" class="bar-container">
+                <div class="bar" :style="{width:calculatePercent(record.TOTAL_YIELD, stateData[county][crop], 'TOTAL_YIELD'), height: '20px', backgroundColor: 'rgb(116,127,252)'}"></div>
+              </div>
               <p v-if="record.TOTAL_HARVESTED_ACRES">Total Harvested Acres: [[record.TOTAL_HARVESTED_ACRES]] ([[calculatePercent(record.TOTAL_HARVESTED_ACRES, stateData[county][crop], 'TOTAL_HARVESTED_ACRES')]] of historic average)</p>
               <p v-else>No Harvested Acres Recorded</p>
-              <div v-if="record.TOTAL_HARVESTED_ACRES" class="bar" :style="{width:calculateBarWidth(record.TOTAL_HARVESTED_ACRES, stateData[county][crop], 'TOTAL_HARVESTED_ACRES'), height: '20px', backgroundColor: 'rgb(116,127,252)'}"></div>
+              <div v-if="record.TOTAL_HARVESTED_ACRES" class="bar-container">
+                <div class="bar" :style="{width:calculatePercent(record.TOTAL_HARVESTED_ACRES, stateData[county][crop], 'TOTAL_HARVESTED_ACRES'), height: '20px', backgroundColor: 'rgb(116,127,252)'}"></div>
+              </div>
             </div>
           </div>
         </div>

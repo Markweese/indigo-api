@@ -41,14 +41,6 @@ const vue = new Vue({
         }
     },
 
-    calculateBarWidth(record, cropArr, field) {
-      let max = cropArr.reduce((max, i) => i[field] > max ? i[field] : max, cropArr[0][field]);
-
-      if (max) {
-        return `${(record/max) * 100}%`;
-      }
-    },
-
     calculatePercent(record, cropArr, field) {
       let average = cropArr.reduce((total, next) => total + next[field], 0) / cropArr.length;
 
