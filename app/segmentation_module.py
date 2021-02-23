@@ -1,12 +1,12 @@
 import pandas
 
-df = pandas.read_csv('data/usda_crops_5yr.csv')
+df = pandas.read_csv('data/userevents.csv')
 df.fillna(0, inplace=True)
 
-class crop_module:
+class segmentation_module:
     # Init
     def __init__(self):
-        print('init crop_module')
+        print('init segmentation_module')
 
     # get_county
     # id: takes FIPS_CODE

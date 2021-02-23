@@ -1,0 +1,167 @@
+[
+    {
+        "name": "WORKING and Insurance",
+        "urls": [
+            {"exact": false, "match": "education/ckd-life/employment"},
+            {"exact": false, "match": "request-insurance-advice"},
+            {"exact": false, "match": "insurance-financial-management"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "HOME",
+        "urls": [
+            {"exact": false, "match": "/home"},
+            {"exact": false, "match": "kidney-diet-tips"},
+            {"exact": false, "match": "/peritoneal-dialysis"},
+            {"exact": false, "match": "davita-care-connect"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "TRANSPLANT",
+        "urls": [
+            {"exact": false, "match": "transplant"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "Covid19",
+        "urls": [
+            {"exact": false, "match": "covid"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "EDUCATION",
+        "urls": [
+            {"exact": false, "match": "education/kidney-smart-classes"},
+            {"exact": false, "match": "transplant"},
+            {"exact": false, "match": "gfr"},
+            {"exact": false, "match": "peritoneal"},
+            {"exact": false, "match": "/home"},
+            {"exact": false, "match": "/kidney-disease/"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "DIET & NUTRITION",
+        "urls": [
+            {"exact": false, "match": "diet-nutrition"},
+            {"exact": false, "match": "diet-and-nutrition"},
+            {"exact": false, "match": "kidney-diet-tips"},
+            {"exact": false, "match": "recipe"},
+            {"exact": false, "match": "cookbook"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "TREATMENT",
+        "urls": [
+            {"exact": false, "match": "/treatment-services"},
+            {"exact": false, "match": "/home-dialysis"},
+            {"exact": false, "match": "/transplant"},
+            {"exact": false, "match": "/home"},
+            {"exact": false, "match": "/peritoneal"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "TREATMENT EVALUATOR",
+        "urls": [
+            {"exact": false, "match": "tools/treatment-evaluator"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "GFR",
+        "urls": [
+            {"exact": false, "match": "/gfr"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "FIND A CENTER",
+        "urls": [
+            {"exact": false, "match": "/find-dialysis-center"},
+            {"exact": false, "match": "/find-a-dialysis-center"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "DIET HELPER (old + new)",
+        "urls": [
+            {"exact": false, "match": "/diet-helper"},
+            {"exact": false, "match": "/food-analyzer"},
+            {"exact": false, "match": "dining-out-guides"},
+            {"exact": false, "match": "recipe-search"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "RISK QUIZ",
+        "urls": [
+            {"exact": false, "match": "/kidney-disease-quiz"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+
+    {
+        "name": "FORUMS",
+        "urls": [
+            {"exact": false, "match": "forums.davita.com"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+
+    {
+        "name": "BLOGS",
+        "urls": [
+            {"exact": false, "match": "blogs"},
+            {"exact": false, "match": "/stories"},
+            {"exact": false, "match": "/medical-insights"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    },
+    {
+        "name": "myDaVita",
+        "urls": [
+            {"exact": false, "match": "com/register"},
+            {"exact": false, "match": "mydavita"},
+            {"exact": false, "match": "com/sign-in"},
+            {"exact": false, "match": "members"},
+            {"exact": false, "match": "password"}
+        ],
+        "ctas": [],
+        "recipeSearches": [],
+        "centerSearches": []
+    }
+]
