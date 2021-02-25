@@ -1,8 +1,42 @@
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <style>
+    table {
+      overflow-x: scroll;
+    }
+
+    thead {
+      background-color: #dddddd;
+    }
+
+    thead:first-child {
+      background-color: #efefef;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 0px;
+    }
+
+    tr:first-child {
+      background-color: #efefef;
+    }
+
+    tr:nth-child(2n) {
+      background-color: #dddddd;
+    }
+
     .app-panel {
       padding: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .output-item {
+      margin: 15px 0px;
     }
 
     body {
@@ -17,17 +51,17 @@
 
     button {
       padding: 10px;
-      color: #0069B1;
+      color: white;
       margin-bottom: -2px;
-      background-color: white;
-      border: 2px solid #0069B1;
-      border-bottom: 2px solid white;
+      background-color: #0069B1;
+      border-bottom: 2px solid #0069B1;
     }
 
     button.--active {
-      color: white;
-      background-color: #0069B1;
-      border-bottom: 2px solid #0069B1;
+      color: #0069B1;
+      background-color: white;
+      border: 2px solid #0069B1;
+      border-bottom: 2px solid white;
     }
 
     button.dropdown-button {
@@ -53,7 +87,17 @@
 
     .segment-dropdown {
       padding: 10px;
+      overflow-x: scroll;
       background-color: #efefef;
+    }
+
+    .segment-indicator {
+      width: 20px;
+      height: 20px;
+      color: white;
+      text-align: center;
+      border-radius: 20px;
+      display: inline-block;
     }
 
     .segment h3 {
@@ -79,18 +123,35 @@
     .--ml-10 {
       margin-left: 10px;
     }
+
+    .--mr-10 {
+      margin-right: 10px;
+    }
+
+    .--block {
+      display: block;
+    }
+
+    .--grayed {
+      color: #aaaaaa;
+    }
+
+    .--italicized {
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
   <div id="vue">
     <header>
-      <button @click="context = 'tester'" :class="{'--active': context === 'tester'}">Test Logic</button>
+      <button @click="context = 'tester'" :class="{'--active': context === 'tester'}">Edit Segments</button>
+      <button @click="context = 'output'" :class="{'--active': context === 'output'}">Run Logic</button>
       <button @click="context = 'uploader'" :class="{'--active': context === 'uploader'}">Upload Data</button>
     </header>
     <div class="app-panel" v-if="context === 'tester'">
-      <h2>All Segments</h2>
+      <div class="panel-header"><h2>Edit Segment Logic</h2><button @click="context = 'output'" class="add-button">Run Logic →</button></div>
       <div class="segment" v-for="segment in segments" :key="segment.name">
-        <h3>[[segment.name]]</h3><button @click="openSection($event)" class="dropdown-button">Edit</button>
+        <h3><div v-bind:style="{backgroundColor:`${segment.color}`}" class="segment-indicator --mr-10"></div>~segment.name~</h3><button @click="openSection($event)" class="dropdown-button">Edit</button>
         <div class="segment-dropdown --dropdown-hidden">
           <div class="--block --mb-10">
             <button class="dropdown-button" @click="openDropdown($event)">Urls</button>
@@ -99,7 +160,7 @@
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.urls || !segment.urls.length">none</li>
-              <li v-for="url in segment.urls">[[url.match]]
+              <li v-for="url in segment.urls">~url.match~
                 <form v-if="url.editing">
                   <input type="text" name="name" placeholder="url path">
                   <select name="exact" id="exact">
@@ -107,7 +168,7 @@
                     <option value="true">yes</option>
                     <option value="false">no</option>
                   </select>
-                  <button class="add-button" type="submit">Save</button>
+                  <button class="add-button" type="submit" @click="saveViewLogic($event, segment.name)">Save</button>
                 </form>
               </li>
             </ul>
@@ -119,12 +180,12 @@
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.ctas || !segment.ctas.length">none</li>
-              <li v-for="cta in segment.ctas">[[cta.name]]
-                <form v-if="cta.editing">
-                  <input type="text" name="name" placeholder="url path">
-                  <input type="text" name="origin" placeholder="originating URL">
-                  <input type="text" name="target" placeholder="cta target">
-                  <button class="add-button" type="submit">Save</button>
+              <li v-for="cta in segment.ctas">~cta.name~
+                <form v-if="cta.editing" :key="cta.id">
+                  <input required type="text" name="name" placeholder="cta name (text on button)" @input="updateCTALogic($event, cta.id, 'name', segment.name)">
+                  <input required type="text" name="origin" placeholder="originating URL" @input="updateCTALogic($event, cta.id, 'origin', segment.name)">
+                  <input required type="text" name="target" placeholder="cta target" @input="updateCTALogic($event, cta.id, 'target', segment.name)">
+                  <button class="add-button" type="submit" @click="saveCTALogic($event, cta.id, segment.name)">Save</button>
                 </form>
               </li>
             </ul>
@@ -136,9 +197,9 @@
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.recipeSearches || !segment.recipeSearches.length">none</li>
-              <li v-for="search in segment.recipeSearches">[[search.term]]
+              <li v-for="search in segment.recipeSearches">Search Term: ~search.searchTerm~
                 <form v-if="search.editing">
-                  <input type="text" name="searchterm" placeholder="search term">
+                  <input required type="text" name="searchterm" placeholder="search term">
                   <select name="filtergroup" id="filtergroup">
                     <option value="">filter group (optional)</option>
                     <option value="recipeCuisineTags">Cuisine</option>
@@ -148,7 +209,7 @@
                     <option value="recipeMethodTags">Method</option>
                     <option value="recipeHolidayTags">Holiday</option>
                   </select>
-                  <button class="add-button" type="submit">Save</button>
+                  <button class="add-button" type="submit" @click="saveRecipeLogic(segment.name)">Save</button>
                 </form>
               </li>
             </ul>
@@ -160,12 +221,20 @@
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.centerSearches || !segment.centerSearches.length">none</li>
-              <li v-for="search in segment.centerSearches">[[search.modality]]
+              <li v-for="search in segment.centerSearches">Modality: ~getModalityName(search.modality)~
                 <form v-if="search.editing">
-                  <input type="number" name="modality" placeholder="modality">
-                  <input type="number" name="zip" placeholder="zipcode">
-                  <input type="text" name="locationName" placeholder="location name">
-                  <button class="add-button" type="submit">Save</button>
+                  <select name="modality">
+                    <option selected="" value="0">Any Treatment</option>
+                        <option value="1">In-Center Hemodialysis</option>
+                        <option value="2">In-Center Nocturnal Dialysis</option>
+                        <option value="3">Home Hemodialysis</option>
+                        <option value="4">Peritoneal Dialysis</option>
+                        <option value="5">Nursing Home Dialysis</option>
+                    
+                </select>
+                  <!-- <input type="number" name="zip" placeholder="zipcode"> -->
+                  <!-- <input type="text" name="locationName" placeholder="location name"> -->
+                  <button class="add-button" type="submit" @click="saveCenterLogic(segment.name)">Save</button>
                 </form>
               </li>
             </ul>
@@ -175,6 +244,50 @@
     </div>
     <div class="app-panel" v-if="context === 'uploader'">
       <h2>Upload a New User Event DB Dump</h2>
+    </div>
+    <div class="app-panel" v-if="context === 'output'">
+      <form action="">
+        <label for="runtype">What Data Do You Want Test On</label>
+        <select name="runType" id="runType" v-model='runType'>
+          <option value="all" selected>All Users</option>
+          <option value="single">One User</option>
+        </select>
+        <select required v-if="runType === 'single'" name="user" id="user" v-model="userRunId">
+          <option v-for="user in allUsers" :value="user">~user~</option>
+        </select>
+        <button type="submit" @click="sendCompileRequest($event)">Test</button>
+      </form>
+      <p v-if="outputLoading">Loading Result...</p>
+      <p v-if="outputLoadingError">~outputLoadingError~</p>
+      <div class="output-item" v-if="output.length" v-for="user in output">
+        ~user.user~ | <span v-if="Object.keys(user.topSegments).length">
+          Top Segments: 
+          <span v-for="s in cleanArray(user.topSegments)">
+            ~s.name~: <div v-bind:style="{backgroundColor:`${getSegmentColor(s.name)}`}" class="segment-indicator">~s.count~</div>, 
+          </span>
+        </span>
+        <span class="--grayed --italicized" v-else>no matching segments</span>
+        <button class="dropdown-button --ml-10" @click="getUserEvents(user.user)">See Interactions</button>
+        <span class="--grayed --italicized" v-if="userInteractionData[user.user] && activeUserDropdown !== user.user">viewed</span>
+        <div v-if="user.user === activeUserDropdown && userInteractionData[user.user]" class="segment-dropdown">
+          <div v-for="group in Object.keys(userInteractionData[user.user])">
+            <h3 v-if="userInteractionData[user.user][group].length">~group~</h3>
+            <table v-if="userInteractionData[user.user][group].length">
+              <thead>
+                <th></th>
+                <th v-for="col in Object.keys(userInteractionData[user.user][group][0])" v-if="col !== 'segments'">~col~</th>
+              </thead>
+              <tbody>
+                <tr v-for="interaction in userInteractionData[user.user][group]">
+                  <td><div class="segment-indicator --block --mb-10" v-if="interaction.segments.length" v-for="segment in interaction.segments" v-bind:style="{backgroundColor:`${getSegmentColor(segment.name)}`}"></div></td>
+                  <td v-for="col in Object.keys(userInteractionData[user.user][group][0])" v-if="col !== 'segments'">~interaction[col]~</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="output-item" v-if="output && !output.length"><span>No Data Found For Specified User(s)</span></div>
     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>

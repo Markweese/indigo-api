@@ -2,9 +2,9 @@
     {
         "name": "WORKING and Insurance",
         "urls": [
-            {"exact": false, "match": "education/ckd-life/employment"},
-            {"exact": false, "match": "request-insurance-advice"},
-            {"exact": false, "match": "insurance-financial-management"}
+            {"weight": 1, "exact": false, "match": "education/ckd-life/employment"},
+            {"weight": 1, "exact": false, "match": "request-insurance-advice"},
+            {"weight": 1, "exact": false, "match": "insurance-financial-management"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -13,19 +13,21 @@
     {
         "name": "HOME",
         "urls": [
-            {"exact": false, "match": "/home"},
-            {"exact": false, "match": "kidney-diet-tips"},
-            {"exact": false, "match": "/peritoneal-dialysis"},
-            {"exact": false, "match": "davita-care-connect"}
+            {"weight": 1, "exact": false, "match": "/home"},
+            {"weight": 1, "exact": false, "match": "kidney-diet-tips"},
+            {"weight": 1, "exact": false, "match": "/peritoneal-dialysis"},
+            {"weight": 1, "exact": false, "match": "davita-care-connect"}
         ],
         "ctas": [],
         "recipeSearches": [],
-        "centerSearches": []
+        "centerSearches": [
+            {"modality": 1}
+        ]
     },
     {
         "name": "TRANSPLANT",
         "urls": [
-            {"exact": false, "match": "transplant"}
+            {"weight": 1, "exact": false, "match": "transplant"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -34,34 +36,38 @@
     {
         "name": "Covid19",
         "urls": [
-            {"exact": false, "match": "covid"}
+            {"weight": 1, "exact": false, "match": "covid"}
         ],
         "ctas": [],
-        "recipeSearches": [],
+        "recipeSearches": [
+            {"searchTerm": "dialysis", "filterGroup": null}
+        ],
         "centerSearches": []
     },
     {
         "name": "EDUCATION",
         "urls": [
-            {"exact": false, "match": "education/kidney-smart-classes"},
-            {"exact": false, "match": "transplant"},
-            {"exact": false, "match": "gfr"},
-            {"exact": false, "match": "peritoneal"},
-            {"exact": false, "match": "/home"},
-            {"exact": false, "match": "/kidney-disease/"}
+            {"weight": 1, "exact": false, "match": "education/kidney-smart-classes"},
+            {"weight": 1, "exact": false, "match": "transplant"},
+            {"weight": 1, "exact": false, "match": "gfr"},
+            {"weight": 1, "exact": false, "match": "peritoneal"},
+            {"weight": 1, "exact": false, "match": "/home"},
+            {"weight": 1, "exact": false, "match": "/kidney-disease/"}
         ],
         "ctas": [],
-        "recipeSearches": [],
+        "recipeSearches": [
+            {"searchTerm": "dialysis", "filterGroup": null}
+        ],
         "centerSearches": []
     },
     {
         "name": "DIET & NUTRITION",
         "urls": [
-            {"exact": false, "match": "diet-nutrition"},
-            {"exact": false, "match": "diet-and-nutrition"},
-            {"exact": false, "match": "kidney-diet-tips"},
-            {"exact": false, "match": "recipe"},
-            {"exact": false, "match": "cookbook"}
+            {"weight": 1, "exact": false, "match": "diet-nutrition"},
+            {"weight": 1, "exact": false, "match": "diet-and-nutrition"},
+            {"weight": 1, "exact": false, "match": "kidney-diet-tips"},
+            {"weight": 1, "exact": false, "match": "recipe"},
+            {"weight": 1, "exact": false, "match": "cookbook"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -70,11 +76,11 @@
     {
         "name": "TREATMENT",
         "urls": [
-            {"exact": false, "match": "/treatment-services"},
-            {"exact": false, "match": "/home-dialysis"},
-            {"exact": false, "match": "/transplant"},
-            {"exact": false, "match": "/home"},
-            {"exact": false, "match": "/peritoneal"}
+            {"weight": 1, "exact": false, "match": "/treatment-services"},
+            {"weight": 1, "exact": false, "match": "/home-dialysis"},
+            {"weight": 1, "exact": false, "match": "/transplant"},
+            {"weight": 1, "exact": false, "match": "/home"},
+            {"weight": 1, "exact": false, "match": "/peritoneal"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -83,7 +89,7 @@
     {
         "name": "TREATMENT EVALUATOR",
         "urls": [
-            {"exact": false, "match": "tools/treatment-evaluator"}
+            {"weight": 1, "exact": false, "match": "tools/treatment-evaluator"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -92,7 +98,7 @@
     {
         "name": "GFR",
         "urls": [
-            {"exact": false, "match": "/gfr"}
+            {"weight": 1, "exact": false, "match": "/gfr"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -101,8 +107,8 @@
     {
         "name": "FIND A CENTER",
         "urls": [
-            {"exact": false, "match": "/find-dialysis-center"},
-            {"exact": false, "match": "/find-a-dialysis-center"}
+            {"weight": 1, "exact": false, "match": "/find-dialysis-center"},
+            {"weight": 1, "exact": false, "match": "/find-a-dialysis-center"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -111,10 +117,10 @@
     {
         "name": "DIET HELPER (old + new)",
         "urls": [
-            {"exact": false, "match": "/diet-helper"},
-            {"exact": false, "match": "/food-analyzer"},
-            {"exact": false, "match": "dining-out-guides"},
-            {"exact": false, "match": "recipe-search"}
+            {"weight": 1, "exact": false, "match": "/diet-helper"},
+            {"weight": 1, "exact": false, "match": "/food-analyzer"},
+            {"weight": 1, "exact": false, "match": "dining-out-guides"},
+            {"weight": 1, "exact": false, "match": "recipe-search"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -123,7 +129,7 @@
     {
         "name": "RISK QUIZ",
         "urls": [
-            {"exact": false, "match": "/kidney-disease-quiz"}
+            {"weight": 1, "exact": false, "match": "/kidney-disease-quiz"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -133,7 +139,7 @@
     {
         "name": "FORUMS",
         "urls": [
-            {"exact": false, "match": "forums.davita.com"}
+            {"weight": 1, "exact": false, "match": "forums.davita.com"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -143,9 +149,9 @@
     {
         "name": "BLOGS",
         "urls": [
-            {"exact": false, "match": "blogs"},
-            {"exact": false, "match": "/stories"},
-            {"exact": false, "match": "/medical-insights"}
+            {"weight": 1, "exact": false, "match": "blogs"},
+            {"weight": 1, "exact": false, "match": "/stories"},
+            {"weight": 1, "exact": false, "match": "/medical-insights"}
         ],
         "ctas": [],
         "recipeSearches": [],
@@ -154,11 +160,11 @@
     {
         "name": "myDaVita",
         "urls": [
-            {"exact": false, "match": "com/register"},
-            {"exact": false, "match": "mydavita"},
-            {"exact": false, "match": "com/sign-in"},
-            {"exact": false, "match": "members"},
-            {"exact": false, "match": "password"}
+            {"weight": 1, "exact": false, "match": "com/register"},
+            {"weight": 1, "exact": false, "match": "mydavita"},
+            {"weight": 1, "exact": false, "match": "com/sign-in"},
+            {"weight": 1, "exact": false, "match": "members"},
+            {"weight": 1, "exact": false, "match": "password"}
         ],
         "ctas": [],
         "recipeSearches": [],
