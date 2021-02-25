@@ -70,7 +70,7 @@ const vue = new Vue({
           editing.urls = [];
         }
 
-        editing.urls.push({id, link: null, exact: false, weight: 1, editing: true});
+        editing.urls.push({id, link: null, match:null, exact: false, weight: 1, editing: true});
       },
 
       addCTA(segment) {
@@ -164,11 +164,95 @@ const vue = new Vue({
         }
       },
 
+      deleteViewLogic(item, segment) {
+        axios({
+          method: 'post',
+          url:'/api/logic/delete',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            segment,
+            eventCategory: 'pageView',
+            link: item.match
+          }
+        })
+        .then(res => {
+          const editing = this.segments.find(s => s.name === segment);
+          editing.urls = editing.urls.filter(v => v.id !== item.id);
+        })
+      },
+
+      deleteCTALogic(item, segment) {
+        axios({
+          method: 'post',
+          url:'/api/logic/delete',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            segment,
+            eventCategory: 'cta',
+            name: item.name,
+            origin: item.origin,
+            target: item.target
+          }
+        })
+        .then(res => {
+          const editing = this.segments.find(s => s.name === segment);
+          editing.ctas = editing.ctas.filter(v => v.id !== item.id);
+        })
+      },
+
+      deleteRecipeLogic(item, segment) {
+        axios({
+          method: 'post',
+          url:'/api/logic/delete',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            segment,
+            eventCategory: 'recipeSearch',
+            searchTerm: item.searchTerm
+          }
+        })
+        .then(res => {
+          const editing = this.segments.find(s => s.name === segment);
+          editing.recipeSearches = editing.recipeSearches.filter(v => v.id !== item.id);
+        })
+      },
+
+      deleteCenterLogic(item, segment) {
+        axios({
+          method: 'post',
+          url:'/api/logic/delete',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            segment,
+            eventCategory: 'centerSearch',
+            modality: item.modality,
+            zip: item.zip,
+            location: item.location
+          }
+        })
+        .then(res => {
+          const editing = this.segments.find(s => s.name === segment);
+          editing.centerSearches = editing.centerSearches.filter(v => v.id !== item.id);
+        })
+      },
+
       updateViewLogic(e, id, field, segment) {
         const editing = this.segments.find(s => s.name === segment);
         const view = editing.urls.find(v => v.id === id);
         
         view[field] = e.target.value;
+
+        if (field === 'link') {
+          view.match = e.target.value;
+        }
       },
 
       updateCTALogic(e, id, field, segment) {

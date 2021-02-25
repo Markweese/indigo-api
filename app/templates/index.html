@@ -26,6 +26,10 @@
       background-color: #dddddd;
     }
 
+    li {
+      padding: 5px 0;
+    }
+
     .app-panel {
       padding: 20px;
     }
@@ -74,6 +78,13 @@
       color: white;
       padding: 5px 10px;
       background-color: darkgreen;
+    }
+
+    button.delete-button {
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      background-color: crimson;
     }
 
     button.dropdown-button::after {
@@ -160,7 +171,7 @@
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.urls || !segment.urls.length">none</li>
-              <li v-for="url in segment.urls" :key="url.id">~url.match~
+              <li v-for="url in segment.urls" :key="url.id">~url.editing ? '' : url.match~
                 <form v-if="url.editing">
                   <input type="text" name="name" placeholder="url path" @input="updateViewLogic($event, url.id, 'link', segment.name)">
                   <select name="exact" id="exact" @input="updateViewLogic($event, url.id, 'exact', segment.name)">
@@ -170,6 +181,7 @@
                   </select>
                   <button class="add-button" type="submit" @click="saveViewLogic($event, url.id, segment.name)">Save</button>
                 </form>
+                <button class="delete-button" @click="deleteViewLogic(url, segment.name)">Delete</button>
               </li>
             </ul>
           </div>
@@ -180,13 +192,14 @@
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.ctas || !segment.ctas.length">none</li>
-              <li v-for="cta in segment.ctas">~cta.name~
+              <li v-for="cta in segment.ctas">~cta.editing ? '' : cta.name~
                 <form v-if="cta.editing" :key="cta.id">
                   <input required type="text" name="name" placeholder="cta name (text on button)" @input="updateCTALogic($event, cta.id, 'name', segment.name)">
                   <input required type="text" name="origin" placeholder="originating URL" @input="updateCTALogic($event, cta.id, 'origin', segment.name)">
                   <input required type="text" name="target" placeholder="cta target" @input="updateCTALogic($event, cta.id, 'target', segment.name)">
                   <button class="add-button" type="submit" @click="saveCTALogic($event, cta.id, segment.name)">Save</button>
                 </form>
+                <button class="delete-button" @click="deleteCTALogic(cta, segment.name)">Delete</button>
               </li>
             </ul>
           </div>
@@ -197,7 +210,7 @@
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.recipeSearches || !segment.recipeSearches.length">none</li>
-              <li v-for="search in segment.recipeSearches">Search Term: ~search.searchTerm~
+              <li v-for="search in segment.recipeSearches">Search Term: ~search.editing ? '' : search.searchTerm~
                 <form v-if="search.editing">
                   <input required type="text" name="searchterm" placeholder="search term" @input="updateRecipeLogic($event, search.id, 'searchTerm', segment.name)">
                   <select name="filtergroup" id="filtergroup" @input="updateRecipeLogic($event, search.id, 'filterGroup', segment.name)">
@@ -211,6 +224,7 @@
                   </select>
                   <button class="add-button" type="submit" @click="saveRecipeLogic($event, search.id, segment.name)">Save</button>
                 </form>
+                <button class="delete-button" @click="deleteRecipeLogic(search, segment.name)">Delete</button>
               </li>
             </ul>
           </div>
@@ -221,7 +235,7 @@
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.centerSearches || !segment.centerSearches.length">none</li>
-              <li v-for="search in segment.centerSearches">Modality: ~getModalityName(search.modality)~
+              <li v-for="search in segment.centerSearches">Modality: ~search.editing ? '' : getModalityName(search.modality)~
                 <form v-if="search.editing">
                   <select name="modality" @input="updateCenterLogic($event, search.id, 'modality', segment.name)">
                     <option selected="" value="0">Any Treatment</option>
@@ -236,6 +250,7 @@
                   <!-- <input type="text" name="locationName" placeholder="location name"> -->
                   <button class="add-button" type="submit" @click="saveCenterLogic($event, search.id, segment.name)">Save</button>
                 </form>
+                <button class="delete-button" @click="deleteCenterLogic(search, segment.name)">Delete</button>
               </li>
             </ul>
           </div>
@@ -257,6 +272,7 @@
         </select>
         <button type="submit" @click="sendCompileRequest($event)">Test</button>
       </form>
+      <button class="delete-button" @click="deleteRecipeLogic(search, segment.name)">Delete</button>
       <p v-if="outputLoading">Loading Result...</p>
       <p v-if="outputLoadingError">~outputLoadingError~</p>
       <div class="output-item" v-if="output.length" v-for="user in output">

@@ -40,6 +40,31 @@ def post_logic():
 
     return selection
 
+@app.route('/api/logic/delete', methods=['POST'])
+def delete_logic():
+    try:
+        segment_obj = request.get_json()
+
+        try:
+            logic_editor_module.delete_logic(segment_obj)
+        except Exception as e:
+            return dict(
+                status=500,
+                message='Error, please reach out to Mark if you cannot resolve'
+            )
+
+        return dict(
+            status=200,
+            message='Successfully updated logic'
+        )
+    except Exception as e:
+        return dict(
+            status=500,
+            message='Error, please reach out to Mark if you cannot resolve'
+        )
+
+    return selection
+
 @app.route('/api/events/new', methods=['POST'])
 def post_events_csv(name):
     try:

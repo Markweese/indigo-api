@@ -94,6 +94,31 @@ class logic_editor_module:
 
                         self.write_json(segments)
 
+    # delete_logic: delete a logic object from a segment
+    def delete_logic(self, obj):
+        with open('data/segments.json', 'r') as segments_file:
+            segments = json.loads(segments_file.read())
+        
+        if any(obj['segment'] == s['name'] for s in segments):
+            editing = [s for s in segments if s['name'] == obj['segment']]
+
+            if len(editing) > 0:
+                editing = editing[0]
+
+                if obj['eventCategory'] == 'pageView' and 'urls' in editing:
+                    editing['urls'] = [v for v in editing['urls'] if v['match'] != obj['link']]
+
+                if obj['eventCategory'] == 'cta' and 'ctas' in editing:
+                    editing['ctas'] = [c for c in editing['ctas'] if c['name'] != obj['name'] or c['origin'] != obj['origin'] or c['target'] != obj['target']]
+
+                if obj['eventCategory'] == 'recipeSearch' and 'recipeSearches' in editing:
+                    editing['recipeSearches'] = [s for s in editing['recipeSearches'] if s['searchTerm'] != obj['searchTerm']]
+
+                if obj['eventCategory'] == 'centerSearch' and 'centerSearches' in editing:
+                    editing['centerSearches'] = [s for s in editing['centerSearches'] if s['modality'] != obj['modality']]
+
+                self.write_json(segments)
+
     # write_json: write new object to json
     # obj: the entire segment object
     def write_json(self, obj):
