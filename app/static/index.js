@@ -26,7 +26,9 @@ const vue = new Vue({
       segmentsLoadingError: null,
       output: null,
       outputLoading: false,
-      outputLoadingError: null
+      outputLoadingError: null,
+      segmentUpdateError: null,
+      segmentUpdateErrorId: null
 
     },
 
@@ -60,14 +62,15 @@ const vue = new Vue({
         e.target.parentElement.nextElementSibling.firstElementChild.classList.toggle('--dropdown-hidden');
       },
 
-      addURL(segment) {
+      addView(segment) {
+        const id = Math.random().toString(36).substring(7);
         const editing = this.segments.find(s => s.name === segment.name);
 
         if (!editing.urls) {
           editing.urls = [];
         }
-        
-        editing.urls.push({link: null, exact: false, editing: true});
+
+        editing.urls.push({id, link: null, exact: false, weight: 1, editing: true});
       },
 
       addCTA(segment) {
@@ -82,23 +85,25 @@ const vue = new Vue({
       },
 
       addRecipeSearch(segment) {
+        const id = Math.random().toString(36).substring(7);
         const editing = this.segments.find(s => s.name === segment.name);
 
         if (!editing.recipeSearches) {
           editing.recipeSearches = [];
         }
 
-        editing.recipeSearches.push({searchTerm: null, recipeCategoryTag: null, predefined: false, editing: true});
+        editing.recipeSearches.push({id, searchTerm: null, filterGroup: null, editing: true});
       },
 
       addCenterSearch(segment) {
+        const id = Math.random().toString(36).substring(7);
         const editing = this.segments.find(s => s.name === segment.name);
 
         if (!editing.centerSearches) {
           editing.centerSearches = [];
         }
 
-        editing.centerSearches.push({zip: null, locationName: null, modality: null, editing: true});
+        editing.centerSearches.push({id, modality: null, zip: null, location: null, editing: true});
       },
 
       sendCompileRequest(e) {
@@ -159,9 +164,11 @@ const vue = new Vue({
         }
       },
 
-      saveViewLogic(e, segment) {
-        e.preventDefault()
-        console.log('saveViewLogic');
+      updateViewLogic(e, id, field, segment) {
+        const editing = this.segments.find(s => s.name === segment);
+        const view = editing.urls.find(v => v.id === id);
+        
+        view[field] = e.target.value;
       },
 
       updateCTALogic(e, id, field, segment) {
@@ -169,6 +176,20 @@ const vue = new Vue({
         const cta = editing.ctas.find(c => c.id === id);
         
         cta[field] = e.target.value;
+      },
+
+      updateRecipeLogic(e, id, field, segment) {
+        const editing = this.segments.find(s => s.name === segment);
+        const search = editing.recipeSearches.find(v => v.id === id);
+        
+        search[field] = e.target.value;
+      },
+
+      updateCenterLogic(e, id, field, segment) {
+        const editing = this.segments.find(s => s.name === segment);
+        const search = editing.centerSearches.find(v => v.id === id);
+        
+        search[field] = e.target.value;
       },
 
       saveCTALogic(e, id, segment) {
@@ -192,18 +213,103 @@ const vue = new Vue({
           }
         })
         .then(res => {
-          console.log(res.data);
+          cta.editing = false;
         })
       },
 
-      saveRecipeLogic(e, segment) {
+      saveViewLogic(e, id, segment) {
         e.preventDefault()
-        console.log('saveRecipeLogic');
+
+        const editing = this.segments.find(s => s.name === segment);
+        const view = editing.urls.find(v => v.id === id);
+
+        axios({
+          method: 'post',
+          url:'/api/logic/update',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            segment,
+            eventCategory: 'pageView',
+            link: view.link,
+            exact: view.exact,
+            weight: view.weight
+          }
+        })
+        .then(res => {
+          if( res.status === 200) {
+            view.editing = false;
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          this.segmentUpdateErrorId = id;
+          this.segmentUpdateError = 'An error occurred loading segments, please contact Mark B. if the issue persists';
+        })
       },
 
-      saveCenterLogic(e, segment) {
+      saveRecipeLogic(e, id, segment) {
         e.preventDefault()
-        console.log('saveCenterLogic');
+
+        const editing = this.segments.find(s => s.name === segment);
+        const search = editing.recipeSearches.find(v => v.id === id);
+
+        axios({
+          method: 'post',
+          url:'/api/logic/update',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            segment,
+            eventCategory: 'recipeSearch',
+            searchTerm: search.searchTerm,
+            filterGroup: search.filterGroup
+          }
+        })
+        .then(res => {
+          if( res.status === 200) {
+            search.editing = false;
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          this.segmentUpdateErrorId = id;
+          this.segmentUpdateError = 'An error occurred loading segments, please contact Mark B. if the issue persists';
+        })
+      },
+
+      saveCenterLogic(e, id, segment) {
+        e.preventDefault()
+
+        const editing = this.segments.find(s => s.name === segment);
+        const search = editing.centerSearches.find(v => v.id === id);
+
+        axios({
+          method: 'post',
+          url:'/api/logic/update',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            segment,
+            eventCategory: 'centerSearch',
+            modality: search.modality,
+            zip: search.zip,
+            location: search.location
+          }
+        })
+        .then(res => {
+          if( res.status === 200) {
+            search.editing = false;
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          this.segmentUpdateErrorId = id;
+          this.segmentUpdateError = 'An error occurred loading segments, please contact Mark B. if the issue persists';
+        })
       },
 
       getSegmentColor(n) {

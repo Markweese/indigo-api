@@ -206,7 +206,7 @@ class segmentation_module:
                     matches += [v for v in views if url['match'] == v['Link']]
                 except Exception as e:
                     print(e)
-        print(matches)
+
         return {'segment': segment['name'], 'count': len(matches), 'matches': matches}
 
     # get_cta_score: count all cta matches between user data and segment

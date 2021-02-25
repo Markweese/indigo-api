@@ -23,7 +23,10 @@ def post_logic():
         try:
             logic_editor_module.update_logic(segment_obj)
         except Exception as e:
-            print(e)
+            return dict(
+                status=500,
+                message='Error, please reach out to Mark if you cannot resolve'
+            )
 
         return dict(
             status=200,

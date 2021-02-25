@@ -155,20 +155,20 @@
         <div class="segment-dropdown --dropdown-hidden">
           <div class="--block --mb-10">
             <button class="dropdown-button" @click="openDropdown($event)">Urls</button>
-            <button @click="addURL(segment)" class="add-button --ml-10">Add URL Target +</button>
+            <button @click="addView(segment)" class="add-button --ml-10">Add URL Target +</button>
           </div>
           <div>
             <ul class="--dropdown-hidden">
               <li v-if="!segment.urls || !segment.urls.length">none</li>
-              <li v-for="url in segment.urls">~url.match~
+              <li v-for="url in segment.urls" :key="url.id">~url.match~
                 <form v-if="url.editing">
-                  <input type="text" name="name" placeholder="url path">
-                  <select name="exact" id="exact">
+                  <input type="text" name="name" placeholder="url path" @input="updateViewLogic($event, url.id, 'link', segment.name)">
+                  <select name="exact" id="exact" @input="updateViewLogic($event, url.id, 'exact', segment.name)">
                     <option value="false">match exactly?</option>
                     <option value="true">yes</option>
                     <option value="false">no</option>
                   </select>
-                  <button class="add-button" type="submit" @click="saveViewLogic($event, segment.name)">Save</button>
+                  <button class="add-button" type="submit" @click="saveViewLogic($event, url.id, segment.name)">Save</button>
                 </form>
               </li>
             </ul>
@@ -199,8 +199,8 @@
               <li v-if="!segment.recipeSearches || !segment.recipeSearches.length">none</li>
               <li v-for="search in segment.recipeSearches">Search Term: ~search.searchTerm~
                 <form v-if="search.editing">
-                  <input required type="text" name="searchterm" placeholder="search term">
-                  <select name="filtergroup" id="filtergroup">
+                  <input required type="text" name="searchterm" placeholder="search term" @input="updateRecipeLogic($event, search.id, 'searchTerm', segment.name)">
+                  <select name="filtergroup" id="filtergroup" @input="updateRecipeLogic($event, search.id, 'filterGroup', segment.name)">
                     <option value="">filter group (optional)</option>
                     <option value="recipeCuisineTags">Cuisine</option>
                     <option value="recipeCategoryTags">Category</option>
@@ -209,7 +209,7 @@
                     <option value="recipeMethodTags">Method</option>
                     <option value="recipeHolidayTags">Holiday</option>
                   </select>
-                  <button class="add-button" type="submit" @click="saveRecipeLogic(segment.name)">Save</button>
+                  <button class="add-button" type="submit" @click="saveRecipeLogic($event, search.id, segment.name)">Save</button>
                 </form>
               </li>
             </ul>
@@ -223,7 +223,7 @@
               <li v-if="!segment.centerSearches || !segment.centerSearches.length">none</li>
               <li v-for="search in segment.centerSearches">Modality: ~getModalityName(search.modality)~
                 <form v-if="search.editing">
-                  <select name="modality">
+                  <select name="modality" @input="updateCenterLogic($event, search.id, 'modality', segment.name)">
                     <option selected="" value="0">Any Treatment</option>
                         <option value="1">In-Center Hemodialysis</option>
                         <option value="2">In-Center Nocturnal Dialysis</option>
@@ -234,7 +234,7 @@
                 </select>
                   <!-- <input type="number" name="zip" placeholder="zipcode"> -->
                   <!-- <input type="text" name="locationName" placeholder="location name"> -->
-                  <button class="add-button" type="submit" @click="saveCenterLogic(segment.name)">Save</button>
+                  <button class="add-button" type="submit" @click="saveCenterLogic($event, search.id, segment.name)">Save</button>
                 </form>
               </li>
             </ul>
