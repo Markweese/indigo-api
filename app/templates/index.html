@@ -181,7 +181,7 @@
                   </select>
                   <button class="add-button" type="submit" @click="saveViewLogic($event, url.id, segment.name)">Save</button>
                 </form>
-                <button class="delete-button" @click="deleteViewLogic(url, segment.name)">Delete</button>
+                <button class="delete-button" v-if="!url.editing" @click="deleteViewLogic(url, segment.name)">Delete</button>
               </li>
             </ul>
           </div>
@@ -195,11 +195,11 @@
               <li v-for="cta in segment.ctas">~cta.editing ? '' : cta.name~
                 <form v-if="cta.editing" :key="cta.id">
                   <input required type="text" name="name" placeholder="cta name (text on button)" @input="updateCTALogic($event, cta.id, 'name', segment.name)">
-                  <input required type="text" name="origin" placeholder="originating URL" @input="updateCTALogic($event, cta.id, 'origin', segment.name)">
-                  <input required type="text" name="target" placeholder="cta target" @input="updateCTALogic($event, cta.id, 'target', segment.name)">
+                  <input required type="text" name="origin" placeholder="originating URL(exact match)" @input="updateCTALogic($event, cta.id, 'origin', segment.name)">
+                  <input required type="text" name="target" placeholder="cta target (exact match)" @input="updateCTALogic($event, cta.id, 'target', segment.name)">
                   <button class="add-button" type="submit" @click="saveCTALogic($event, cta.id, segment.name)">Save</button>
                 </form>
-                <button class="delete-button" @click="deleteCTALogic(cta, segment.name)">Delete</button>
+                <button class="delete-button" v-if="!cta.editing" @click="deleteCTALogic(cta, segment.name)">Delete</button>
               </li>
             </ul>
           </div>
@@ -224,7 +224,7 @@
                   </select>
                   <button class="add-button" type="submit" @click="saveRecipeLogic($event, search.id, segment.name)">Save</button>
                 </form>
-                <button class="delete-button" @click="deleteRecipeLogic(search, segment.name)">Delete</button>
+                <button class="delete-button" v-if="!search.editing" @click="deleteRecipeLogic(search, segment.name)">Delete</button>
               </li>
             </ul>
           </div>
@@ -250,7 +250,7 @@
                   <!-- <input type="text" name="locationName" placeholder="location name"> -->
                   <button class="add-button" type="submit" @click="saveCenterLogic($event, search.id, segment.name)">Save</button>
                 </form>
-                <button class="delete-button" @click="deleteCenterLogic(search, segment.name)">Delete</button>
+                <button class="delete-button" v-if="!search.editing" @click="deleteCenterLogic(search, segment.name)">Delete</button>
               </li>
             </ul>
           </div>
@@ -272,7 +272,6 @@
         </select>
         <button type="submit" @click="sendCompileRequest($event)">Test</button>
       </form>
-      <button class="delete-button" @click="deleteRecipeLogic(search, segment.name)">Delete</button>
       <p v-if="outputLoading">Loading Result...</p>
       <p v-if="outputLoadingError">~outputLoadingError~</p>
       <div class="output-item" v-if="output.length" v-for="user in output">

@@ -49,7 +49,7 @@ class logic_editor_module:
                             'name': segment_obj['name']
                         }
 
-                        if 'cta' not in editing:
+                        if 'ctas' not in editing:
                             editing['ctas'] = []
 
                         editing['ctas'].append(insert_obj)
@@ -129,7 +129,7 @@ class logic_editor_module:
 
     # backup_json: save the old json version before overwriting
     def backup_json(self):
-        today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
+        today = datetime.today().strftime('%Y%m%d%H%M%S')
         filename = f'segments-{today}.json'
 
         with open('data/segments.json', 'r') as segments_file:

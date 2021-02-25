@@ -40,6 +40,27 @@ const vue = new Vue({
           .then(res => {
             res.data.map(s => {
               s.color = Math.floor(100000 + Math.random() * 900000);
+
+              s.urls = s.urls.map(i => {
+                i.id = Math.random().toString(36).substring(7);
+                return i;
+              });
+
+              s.ctas = s.ctas.map(i => {
+                i.id = Math.random().toString(36).substring(7);
+                return i;
+              });
+
+              s.recipeSearches = s.recipeSearches.map(i => {
+                i.id = Math.random().toString(36).substring(7);
+                return i;
+              });
+
+              s.centerSearches = s.centerSearches.map(i => {
+                i.id = Math.random().toString(36).substring(7);
+                return i;
+              });
+
               return s;
             });
 
