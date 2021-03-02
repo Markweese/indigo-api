@@ -194,6 +194,7 @@ class segmentation_module:
     # views: the user views to match against
     def get_url_score(self, segment, views):
         matches = []
+        count = 0
 
         for url in segment['urls']:
             if url['exact'] == False:
@@ -216,6 +217,7 @@ class segmentation_module:
     # ctas: the user ctas to match against
     def get_cta_score(self, segment, ctas):
         matches = []
+        count = 0
 
         for cta in segment['ctas']:
             try:
@@ -231,6 +233,7 @@ class segmentation_module:
     # recipes: the user recipes to match against
     def get_recipe_score(self, segment, recipes):
         matches = []
+        count = 0
 
         for recipe in segment['recipeSearches']:
             try:
@@ -246,6 +249,7 @@ class segmentation_module:
     # centers: the user centers to match against
     def get_center_score(self, segment, centers):
         matches = []
+        count = 0
 
         for center in segment['centerSearches']:
             try:
