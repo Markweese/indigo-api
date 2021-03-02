@@ -1,7 +1,7 @@
 import json
 import pandas
 
-df = pandas.read_csv('data/userevents.csv')
+df = pandas.read_csv('app/data/userevents.csv')
 df.fillna(0, inplace=True)
 
 class segmentation_module:
@@ -27,7 +27,7 @@ class segmentation_module:
         # count page views
         try:
             page_views_matches = [self.get_url_score(s, page_views) for s in segments]
-            
+
             for m in page_views_matches:
                 if m['segment'] in top_segments:
                     top_segments[m['segment']] += m['count']
@@ -39,7 +39,7 @@ class segmentation_module:
         # count ctas
         try:
             ctas_matches = [self.get_cta_score(s, ctas) for s in segments]
-            
+
             for m in ctas_matches:
                 if m['segment'] in top_segments:
                     top_segments[m['segment']] += m['count']
@@ -51,7 +51,7 @@ class segmentation_module:
         # count recipe searches
         try:
             recipe_searches_matches = [self.get_recipe_score(s, recipe_searches) for s in segments]
-            
+
             for m in recipe_searches_matches:
                 if m['segment'] in top_segments:
                     top_segments[m['segment']] += m['count']
@@ -63,7 +63,7 @@ class segmentation_module:
         # count center searches
         try:
             center_searches_matches = [self.get_center_score(s, center_searches) for s in segments]
-            
+
             for m in center_searches_matches:
                 if m['segment'] in top_segments:
                     top_segments[m['segment']] += m['count']
@@ -99,11 +99,11 @@ class segmentation_module:
             page_views = sel[sel['EventCategory'] == 'pageView'].to_dict('records')
             center_searches = sel[sel['EventCategory'] == 'centerSearch'].to_dict('records')
             recipe_searches = sel[sel['EventCategory'] == 'recipeSearch'].to_dict('records')
-            
+
             # count page views
             try:
                 page_views_matches = [self.get_url_score(s, page_views) for s in segments]
-                
+
                 for m in page_views_matches:
                     if m['segment'] in top_segments:
                         top_segments[m['segment']] += m['count']
@@ -115,7 +115,7 @@ class segmentation_module:
             # count ctas
             try:
                 ctas_matches = [self.get_cta_score(s, ctas) for s in segments]
-                
+
                 for m in ctas_matches:
                     if m['segment'] in top_segments:
                         top_segments[m['segment']] += m['count']
@@ -127,7 +127,7 @@ class segmentation_module:
             # count recipe searches
             try:
                 recipe_searches_matches = [self.get_recipe_score(s, recipe_searches) for s in segments]
-                
+
                 for m in recipe_searches_matches:
                     if m['segment'] in top_segments:
                         top_segments[m['segment']] += m['count']
@@ -139,7 +139,7 @@ class segmentation_module:
             # count center searches
             try:
                 center_searches_matches = [self.get_center_score(s, center_searches) for s in segments]
-                
+
                 for m in center_searches_matches:
                     if m['segment'] in top_segments:
                         top_segments[m['segment']] += m['count']
