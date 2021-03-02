@@ -15,6 +15,7 @@ const vue = new Vue({
     },
 
     data: {
+      addingSegment: false,
       userInteractionData: {},
       activeUserDropdown: null,
       runType: 'all',
@@ -28,7 +29,9 @@ const vue = new Vue({
       outputLoading: false,
       outputLoadingError: null,
       segmentUpdateError: null,
-      segmentUpdateErrorId: null
+      segmentUpdateErrorId: null,
+      segmentCreateError: null,
+      newSegmentName: null
 
     },
 
@@ -39,6 +42,7 @@ const vue = new Vue({
         axios.get('/api/segments/get/')
           .then(res => {
             res.data.map(s => {
+              s.id = Math.random().toString(36).substring(7);
               s.color = Math.floor(100000 + Math.random() * 900000);
 
               s.urls = s.urls.map(i => {
@@ -265,6 +269,46 @@ const vue = new Vue({
         })
       },
 
+      deleteSegment(segment) {
+        axios({
+          method: 'post',
+          url:'/api/segment/delete',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            segment: segment.name
+          }
+        })
+        .then(res => {
+          this.segments = this.segments.filter(s => s.name !== segment.name);
+        });
+      },
+
+      createSegment(e) {
+        e.preventDefault();
+        
+        if(this.newSegmentName && !this.segmentCreateError) {
+          axios({
+            method: 'post',
+            url:'/api/segment/create',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            data: {
+              segment: this.newSegmentName
+            }
+          })
+          .then(res => {
+            res.data.id = Math.random().toString(36).substring(7);
+            res.data.color = Math.floor(100000 + Math.random() * 900000);
+            this.segments.unshift(res.data);
+            this.newSegmentName = null;
+            this.addingSegment = false;
+          });
+        }
+      },
+
       updateViewLogic(e, id, field, segment) {
         const editing = this.segments.find(s => s.name === segment);
         const view = editing.urls.find(v => v.id === id);
@@ -418,7 +462,9 @@ const vue = new Vue({
       },
 
       getSegmentColor(n) {
-        return this.segments.filter(s => s.name === n)[0].color;
+        if (this.segments.filter(s => s.name === n).length) {
+          return this.segments.filter(s => s.name === n)[0].color;
+        }
       },
 
       cleanArray(segments) {
@@ -436,6 +482,7 @@ const vue = new Vue({
 
       getModalityName(modality) {
         const mmap = {
+          0: "Any Treatment",
           1: "In-Center Hemodialysis",
           2: "In-Center Nocturnal Dialysis",
           3: "Home Hemodialysis",
@@ -444,6 +491,18 @@ const vue = new Vue({
         };
 
         return mmap[modality];
+      },
+
+      validateName(e) {
+        const input = e.target.value.toLowerCase();
+        const checkAgainst = this.segments.map(s => { return s.name.toLowerCase() });
+
+        if(checkAgainst.includes(input)){
+          this.segmentCreateError = 'That segment name is already in use';
+        } else {
+          this.segmentCreateError = null;
+          this.newSegmentName = e.target.value;
+        }
       }
     }
 })

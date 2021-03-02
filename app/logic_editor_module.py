@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class logic_editor_module:
     # Init
@@ -118,6 +118,37 @@ class logic_editor_module:
                     editing['centerSearches'] = [s for s in editing['centerSearches'] if s['modality'] != obj['modality']]
 
                 self.write_json(segments)
+
+    # delete_segment: delete a segment object from segments
+    def delete_segment(self, obj):
+        with open('data/segments.json', 'r') as segments_file:
+            segments = json.loads(segments_file.read())
+        
+        segments = [s for s in segments if s['name'] != obj['segment']]
+        self.write_json(segments)
+
+    # create_segment: create a segment object
+    def create_segment(self, obj):
+        with open('data/segments.json', 'r') as segments_file:
+            segments = json.loads(segments_file.read())
+        
+        if not any([s for s in segments if s['name'] == obj['segment']]):
+            new_segment = {
+                "name": obj['segment'],
+                "urls": [],
+                "ctas": [],
+                "recipeSearches": [],
+                "centerSearches": []
+            }
+
+            segments.append(new_segment)
+        
+        try:
+            self.write_json(segments)
+            return new_segment
+        except Exception as e:
+            print(e)
+
 
     # write_json: write new object to json
     # obj: the entire segment object

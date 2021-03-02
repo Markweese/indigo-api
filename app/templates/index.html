@@ -102,9 +102,23 @@
       background-color: #efefef;
     }
 
+    .segment-tag {
+      background-color: rgba(255, 255, 50, .5);
+    }
+
+    .segment-tag::after {
+      content: ',';
+      background-color: white;
+    }
+
+    .segment-tag:last-of-type::after {
+      content: '';
+    }
+
     .segment-indicator {
       width: 20px;
       height: 20px;
+      min-width: max-content;
       color: white;
       text-align: center;
       border-radius: 20px;
@@ -114,6 +128,10 @@
     .segment h3 {
       margin-right: 10px;
       display: inline-block;
+    }
+
+    .error-message {
+      color: crimson;
     }
 
     .--dropdown-hidden {
@@ -161,8 +179,16 @@
     </header>
     <div class="app-panel" v-if="context === 'tester'">
       <div class="panel-header"><h2>Edit Segment Logic</h2><button @click="context = 'output'" class="add-button">Run Logic →</button></div>
-      <div class="segment" v-for="segment in segments" :key="segment.name">
-        <h3><div v-bind:style="{backgroundColor:`${segment.color}`}" class="segment-indicator --mr-10"></div>~segment.name~</h3><button @click="openSection($event)" class="dropdown-button">Edit</button>
+      <button @click="addingSegment = true" class="add-button --mb-10">Add Segment +</button>
+      <form v-if="addingSegment">
+        <input type="text" name="segmentName" @input="validateName($event)" placeholder="segment name">
+        <button @click="createSegment($event)" v-if="!segmentCreateError" type="submit" class="add-button">Create</button>
+        <label v-if="segmentCreateError" class="error-message --italicized --block" for="segmentName">~segmentCreateError~</label>
+      </form>
+      <div class="segment" v-for="segment in segments" :key="segment.id">
+        <h3><div v-bind:style="{backgroundColor:`${segment.color}`}" class="segment-indicator --mr-10"></div>~segment.name~</h3>
+        <button @click="deleteSegment(segment)" class="delete-button">Delete</button>
+        <button @click="openSection($event)" class="dropdown-button">Edit</button>
         <div class="segment-dropdown --dropdown-hidden">
           <div class="--block --mb-10">
             <button class="dropdown-button" @click="openDropdown($event)">Urls</button>
@@ -238,7 +264,7 @@
               <li v-for="search in segment.centerSearches">Modality: ~search.editing ? '' : getModalityName(search.modality)~
                 <form v-if="search.editing">
                   <select name="modality" @input="updateCenterLogic($event, search.id, 'modality', segment.name)">
-                    <option selected="" value="0">Any Treatment</option>
+                        <option selected="" value="0">Any Treatment</option>
                         <option value="1">In-Center Hemodialysis</option>
                         <option value="2">In-Center Nocturnal Dialysis</option>
                         <option value="3">Home Hemodialysis</option>
@@ -277,8 +303,8 @@
       <div class="output-item" v-if="output.length" v-for="user in output">
         ~user.user~ | <span v-if="Object.keys(user.topSegments).length">
           Top Segments: 
-          <span v-for="s in cleanArray(user.topSegments)">
-            ~s.name~: <div v-bind:style="{backgroundColor:`${getSegmentColor(s.name)}`}" class="segment-indicator">~s.count~</div>, 
+          <span class="segment-tag" v-for="s in cleanArray(user.topSegments)">
+            ~s.name~: <div v-bind:style="{backgroundColor:`${getSegmentColor(s.name)}`}" class="segment-indicator">~s.count~</div> 
           </span>
         </span>
         <span class="--grayed --italicized" v-else>no matching segments</span>
