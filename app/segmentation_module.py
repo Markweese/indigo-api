@@ -15,7 +15,7 @@ class segmentation_module:
         top_segments = {}
         output_object = []
 
-        with open('data/segments.json', 'r', encoding='utf-8') as segments_file:
+        with open('app/data/segments.json', 'r', encoding='utf-8') as segments_file:
             segments = json.loads(segments_file.read())
 
         sel = df[df['UserID'] == id]
@@ -88,7 +88,7 @@ class segmentation_module:
     def derive_segments(self):
         users = df['UserID'].unique()
 
-        with open('data/segments.json', 'r', encoding='utf-8') as segments_file:
+        with open('app/data/segments.json', 'r', encoding='utf-8') as segments_file:
             output_object = []
             segments = json.loads(segments_file.read())
 
@@ -168,7 +168,7 @@ class segmentation_module:
         center_searches = sel[sel['EventCategory'] == 'centerSearch'].to_dict('records')
         recipe_searches = sel[sel['EventCategory'] == 'recipeSearch'].to_dict('records')
 
-        with open('data/segments.json', 'r', encoding='utf-8') as segments_file:
+        with open('app/data/segments.json', 'r', encoding='utf-8') as segments_file:
             segments = json.loads(segments_file.read())
 
         # modify each event type group to say which segment each event falls into, if any
@@ -199,15 +199,17 @@ class segmentation_module:
             if url['exact'] == False:
                 try:
                     matches += [v for v in views if url['match'].lower() in v['Link'].lower()]
+                    count = len(matches) * url['weight']
                 except Exception as e:
                     print(e)
             else:
                 try:
-                    matches += [v for v in views if url['match'] == v['Link']]
+                    matches += [v for v in views if url['match'].lower() == v['Link'].lower()]
+                    count = len(matches) * url['weight']
                 except Exception as e:
                     print(e)
 
-        return {'segment': segment['name'], 'count': len(matches), 'matches': matches}
+        return {'segment': segment['name'], 'count': count, 'matches': matches}
 
     # get_cta_score: count all cta matches between user data and segment
     # segment: the segment to match against
@@ -218,10 +220,11 @@ class segmentation_module:
         for cta in segment['ctas']:
             try:
                 matches += [c for c in ctas if cta['target'] in c['Target'] and cta['origin'] in c['Origin'] and str(cta['name']).lower() == str(c['Name']).lower()]
+                count = len(matches) * cta['weight']
             except Exception as e:
                 print(e)
 
-        return {'segment': segment['name'], 'count': len(matches), 'matches': matches}
+        return {'segment': segment['name'], 'count': count, 'matches': matches}
 
     # get_recipe_score: count all recipe matches between user data and segment
     # segment: the segment to match against
@@ -232,10 +235,11 @@ class segmentation_module:
         for recipe in segment['recipeSearches']:
             try:
                 matches += [r for r in recipes if recipe['searchTerm'].lower() in str(r['SearchTerm']).lower()]
+                count = len(matches) * recipe['weight']
             except Exception as e:
                 print(e)
 
-        return {'segment': segment['name'], 'count': len(matches), 'matches': matches}
+        return {'segment': segment['name'], 'count': count, 'matches': matches}
 
     # get_center_score: count all center matches between user data and segment
     # segment: the segment to match against
@@ -246,10 +250,11 @@ class segmentation_module:
         for center in segment['centerSearches']:
             try:
                 matches += [c for c in centers if int(center['modality']) == int(c['Modality'])]
+                count = len(matches) * center['weight']
             except Exception as e:
                 print(e)
 
-        return {'segment': segment['name'], 'count': len(matches), 'matches': matches}
+        return {'segment': segment['name'], 'count': count, 'matches': matches}
 
     # get_url_events: count all url matches between user data and segment
     # segment: the segment to match against

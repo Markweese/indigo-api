@@ -15,6 +15,8 @@ const vue = new Vue({
     },
 
     data: {
+      summaryStats: null,
+      currentSelection: null,
       addingSegment: false,
       userInteractionData: {},
       activeUserDropdown: null,
@@ -81,7 +83,7 @@ const vue = new Vue({
         e.target.classList.toggle('--active');
         e.target.nextElementSibling.classList.toggle('--dropdown-hidden');
       },
-      
+
       openDropdown(e) {
         e.target.classList.toggle('--active');
         e.target.parentElement.nextElementSibling.firstElementChild.classList.toggle('--dropdown-hidden');
@@ -106,7 +108,7 @@ const vue = new Vue({
           editing.ctas = [];
         }
 
-        editing.ctas.push({id, name: null, origin: null, target: false, editing: true});
+        editing.ctas.push({id, name: null, origin: null, target: false, editing: true, weight: 1});
       },
 
       addRecipeSearch(segment) {
@@ -117,7 +119,7 @@ const vue = new Vue({
           editing.recipeSearches = [];
         }
 
-        editing.recipeSearches.push({id, searchTerm: null, filterGroup: null, editing: true});
+        editing.recipeSearches.push({id, searchTerm: null, filterGroup: null, editing: true, weight: 1});
       },
 
       addCenterSearch(segment) {
@@ -128,7 +130,7 @@ const vue = new Vue({
           editing.centerSearches = [];
         }
 
-        editing.centerSearches.push({id, modality: null, zip: null, location: null, editing: true});
+        editing.centerSearches.push({id, modality: null, zip: null, location: null, editing: true, weight: 1});
       },
 
       sendCompileRequest(e) {
@@ -148,6 +150,7 @@ const vue = new Vue({
         axios.get(`/api/user/get/segments/${this.userRunId}`)
           .then(res => {
             this.output = res.data;
+            this.currentSelection = this.output;
             this.outputLoading = false;
           })
           .catch(e => {
@@ -163,12 +166,30 @@ const vue = new Vue({
         axios.get('/api/users/get')
           .then(res => {
             this.output = res.data;
+            this.currentSelection = res.data.filter(u => Object.keys(u.topSegments).length);
             this.outputLoading = false;
+            this.getSummaryStats(res.data);
           })
           .catch(e => {
             console.log(e);
             this.outputLoadingError = 'An error occurred loading segments, please contact Mark B. if the issue persists';
           })
+      },
+
+      getSummaryStats(data) {
+        let segmentCount = {};
+
+        data.forEach((item) => {
+          Object.keys(item.topSegments).forEach((segment) => {
+            if (segmentCount[segment]) {
+              segmentCount[segment] += 1;
+            } else {
+              segmentCount[segment] = 1;
+            }
+          });
+        });
+
+        this.summaryStats = segmentCount;
       },
 
       getUserEvents(id) {
@@ -287,7 +308,7 @@ const vue = new Vue({
 
       createSegment(e) {
         e.preventDefault();
-        
+
         if(this.newSegmentName && !this.segmentCreateError) {
           axios({
             method: 'post',
@@ -312,7 +333,7 @@ const vue = new Vue({
       updateViewLogic(e, id, field, segment) {
         const editing = this.segments.find(s => s.name === segment);
         const view = editing.urls.find(v => v.id === id);
-        
+
         view[field] = e.target.value;
 
         if (field === 'link') {
@@ -323,21 +344,21 @@ const vue = new Vue({
       updateCTALogic(e, id, field, segment) {
         const editing = this.segments.find(s => s.name === segment);
         const cta = editing.ctas.find(c => c.id === id);
-        
+
         cta[field] = e.target.value;
       },
 
       updateRecipeLogic(e, id, field, segment) {
         const editing = this.segments.find(s => s.name === segment);
         const search = editing.recipeSearches.find(v => v.id === id);
-        
+
         search[field] = e.target.value;
       },
 
       updateCenterLogic(e, id, field, segment) {
         const editing = this.segments.find(s => s.name === segment);
         const search = editing.centerSearches.find(v => v.id === id);
-        
+
         search[field] = e.target.value;
       },
 
@@ -358,7 +379,8 @@ const vue = new Vue({
             eventCategory: 'cta',
             name: cta.name,
             origin: cta.origin,
-            target: cta.target
+            target: cta.target,
+            weight: cta.weight ? cta.weight : 1
           }
         })
         .then(res => {
@@ -383,7 +405,7 @@ const vue = new Vue({
             eventCategory: 'pageView',
             link: view.link,
             exact: view.exact,
-            weight: view.weight
+            weight: view.weight ? view.weight : 1
           }
         })
         .then(res => {
@@ -414,7 +436,8 @@ const vue = new Vue({
             segment,
             eventCategory: 'recipeSearch',
             searchTerm: search.searchTerm,
-            filterGroup: search.filterGroup
+            filterGroup: search.filterGroup,
+            weight: search.weight ? search.weight : 1
           }
         })
         .then(res => {
@@ -446,7 +469,8 @@ const vue = new Vue({
             eventCategory: 'centerSearch',
             modality: search.modality,
             zip: search.zip,
-            location: search.location
+            location: search.location,
+            weight: search.weight ? search.weight : 1
           }
         })
         .then(res => {
@@ -502,6 +526,14 @@ const vue = new Vue({
         } else {
           this.segmentCreateError = null;
           this.newSegmentName = e.target.value;
+        }
+      },
+
+      toggleUnclassified(e) {
+        if (e.target.checked) {
+          this.currentSelection = this.output;
+        } else {
+          this.currentSelection = this.output.filter(u => Object.keys(u.topSegments).length);
         }
       }
     }

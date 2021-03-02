@@ -8,7 +8,7 @@ class logic_editor_module:
 
     # Update logic
     def update_logic(self, segment_obj):
-        with open('data/segments.json', 'r', encoding='utf-8') as segments_file:
+        with open('app/data/segments.json', 'r', encoding='utf-8') as segments_file:
             segments = json.loads(segments_file.read())
 
         if any(segment_obj['segment'] == s['name'] for s in segments):
@@ -24,8 +24,8 @@ class logic_editor_module:
 
                         insert_obj = {
                             'match': segment_obj['link'],
-                            'exact': exact,
-                            'weight': weight
+                            'exact': exact == 'true',
+                            'weight': int(weight)
                         }
 
                         if 'urls' not in editing:
@@ -40,13 +40,16 @@ class logic_editor_module:
                             status=422,
                             message='not all neccesary fields were provided'
                         )
-                    
+
                 if segment_obj['eventCategory'] == 'cta':
                     if 'origin' in segment_obj and 'target' in segment_obj and 'name' in segment_obj:
+                        weight = segment_obj['weight'] if 'weight' in segment_obj else 1
+
                         insert_obj = {
                             'origin': segment_obj['origin'],
                             'target': segment_obj['target'],
-                            'name': segment_obj['name']
+                            'name': segment_obj['name'],
+                            'weight': int(weight)
                         }
 
                         if 'ctas' not in editing:
@@ -64,8 +67,11 @@ class logic_editor_module:
 
                 if segment_obj['eventCategory'] == 'recipeSearch':
                     if 'searchTerm' in segment_obj:
+                        weight = segment_obj['weight'] if 'weight' in segment_obj else 1
+
                         insert_obj = {
-                            'searchTerm': segment_obj['searchTerm']
+                            'searchTerm': segment_obj['searchTerm'],
+                            'weight': int(weight)
                         }
 
                         if 'recipeSearches' not in editing:
@@ -80,11 +86,14 @@ class logic_editor_module:
                             status=422,
                             message='not all neccesary fields were provided'
                         )
-                
+
                 if segment_obj['eventCategory'] == 'centerSearch':
                     if 'modality' in segment_obj:
+                        weight = segment_obj['weight'] if 'weight' in segment_obj else 1
+
                         insert_obj = {
-                            'modality': segment_obj['modality']
+                            'modality': segment_obj['modality'],
+                            'weight': int(weight)
                         }
 
                         if 'centerSearches' not in editing:
@@ -96,9 +105,9 @@ class logic_editor_module:
 
     # delete_logic: delete a logic object from a segment
     def delete_logic(self, obj):
-        with open('data/segments.json', 'r') as segments_file:
+        with open('app/data/segments.json', 'r') as segments_file:
             segments = json.loads(segments_file.read())
-        
+
         if any(obj['segment'] == s['name'] for s in segments):
             editing = [s for s in segments if s['name'] == obj['segment']]
 
@@ -121,17 +130,17 @@ class logic_editor_module:
 
     # delete_segment: delete a segment object from segments
     def delete_segment(self, obj):
-        with open('data/segments.json', 'r') as segments_file:
+        with open('app/data/segments.json', 'r') as segments_file:
             segments = json.loads(segments_file.read())
-        
+
         segments = [s for s in segments if s['name'] != obj['segment']]
         self.write_json(segments)
 
     # create_segment: create a segment object
     def create_segment(self, obj):
-        with open('data/segments.json', 'r') as segments_file:
+        with open('app/data/segments.json', 'r') as segments_file:
             segments = json.loads(segments_file.read())
-        
+
         if not any([s for s in segments if s['name'] == obj['segment']]):
             new_segment = {
                 "name": obj['segment'],
@@ -142,7 +151,7 @@ class logic_editor_module:
             }
 
             segments.append(new_segment)
-        
+
         try:
             self.write_json(segments)
             return new_segment
@@ -155,7 +164,7 @@ class logic_editor_module:
     def write_json(self, obj):
         self.backup_json()
 
-        with open('data/segments.json', 'w') as segments_file:
+        with open('app/data/segments.json', 'w') as segments_file:
             json.dump(obj, segments_file)
 
     # backup_json: save the old json version before overwriting
@@ -163,8 +172,8 @@ class logic_editor_module:
         today = datetime.today().strftime('%Y%m%d%H%M%S')
         filename = f'segments-{today}.json'
 
-        with open('data/segments.json', 'r') as segments_file:
+        with open('app/data/segments.json', 'r') as segments_file:
             backup = json.loads(segments_file.read())
-        
-        with open(f'data/{filename}', 'w') as backup_file:
+
+        with open(f'app/data/{filename}', 'w') as backup_file:
             json.dump(backup, backup_file)

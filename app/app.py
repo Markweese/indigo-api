@@ -71,7 +71,7 @@ def delete_segment():
 
     try:
         logic_editor_module.delete_segment(req_obj)
-        
+
         return dict(
             status=200,
             message='Success'
@@ -85,7 +85,7 @@ def delete_segment():
 @app.route('/api/segment/create', methods=['POST'])
 def create_segment():
     req_obj = request.get_json()
-    
+
     try:
         new_obj = logic_editor_module.create_segment(req_obj)
         return json.dumps(new_obj)
@@ -149,7 +149,7 @@ def get_user_events(id):
 @app.route('/api/segments/get/', methods=['GET'])
 def get_all_segments():
     try:
-        with open('data/segments.json', 'r') as segments:
+        with open('app/data/segments.json', 'r') as segments:
             pj = json.loads(segments.read())
             return json.dumps(pj)
     except Exception as e:
