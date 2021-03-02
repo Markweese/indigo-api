@@ -1,4 +1,4 @@
-#Steps to run locally
+# Steps to run locally
 - Install Docker on your machine
 - clone this repository
 - cd into the root directory (logic-flow)
