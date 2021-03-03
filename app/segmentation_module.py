@@ -1,7 +1,8 @@
+import os
 import json
 import pandas
 
-df = pandas.read_csv('app/data/userevents.csv')
+df = pandas.read_csv(os.path.abspath('app/data/userevents.csv'))
 df.fillna(0, inplace=True)
 
 class segmentation_module:

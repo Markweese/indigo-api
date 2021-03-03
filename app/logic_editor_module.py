@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime, timedelta
 
@@ -8,7 +9,7 @@ class logic_editor_module:
 
     # Update logic
     def update_logic(self, segment_obj):
-        with open('app/data/segments.json', 'r', encoding='utf-8') as segments_file:
+        with open(os.path.abspath('app/data/segments.json'), 'r', encoding='utf-8') as segments_file:
             segments = json.loads(segments_file.read())
 
         if any(segment_obj['segment'] == s['name'] for s in segments):
@@ -105,7 +106,7 @@ class logic_editor_module:
 
     # delete_logic: delete a logic object from a segment
     def delete_logic(self, obj):
-        with open('app/data/segments.json', 'r') as segments_file:
+        with open(os.path.abspath('app/data/segments.json'), 'r') as segments_file:
             segments = json.loads(segments_file.read())
 
         if any(obj['segment'] == s['name'] for s in segments):
@@ -130,7 +131,7 @@ class logic_editor_module:
 
     # delete_segment: delete a segment object from segments
     def delete_segment(self, obj):
-        with open('app/data/segments.json', 'r') as segments_file:
+        with open(os.path.abspath('app/data/segments.json'), 'r') as segments_file:
             segments = json.loads(segments_file.read())
 
         segments = [s for s in segments if s['name'] != obj['segment']]
@@ -138,7 +139,7 @@ class logic_editor_module:
 
     # create_segment: create a segment object
     def create_segment(self, obj):
-        with open('app/data/segments.json', 'r') as segments_file:
+        with open(os.path.abspath('app/data/segments.json'), 'r') as segments_file:
             segments = json.loads(segments_file.read())
 
         if not any([s for s in segments if s['name'] == obj['segment']]):
@@ -164,7 +165,7 @@ class logic_editor_module:
     def write_json(self, obj):
         self.backup_json()
 
-        with open('app/data/segments.json', 'w') as segments_file:
+        with open(os.path.abspath('app/data/segments.json'), 'w') as segments_file:
             json.dump(obj, segments_file)
 
     # backup_json: save the old json version before overwriting
@@ -172,7 +173,7 @@ class logic_editor_module:
         today = datetime.today().strftime('%Y%m%d%H%M%S')
         filename = f'segments-{today}.json'
 
-        with open('app/data/segments.json', 'r') as segments_file:
+        with open(os.path.abspath('app/data/segments.json'), 'r') as segments_file:
             backup = json.loads(segments_file.read())
 
         with open(f'app/data/{filename}', 'w') as backup_file:

@@ -1,3 +1,4 @@
+import os
 import json
 import flask
 from flask import Response
@@ -149,7 +150,7 @@ def get_user_events(id):
 @app.route('/api/segments/get/', methods=['GET'])
 def get_all_segments():
     try:
-        with open('app/data/segments.json', 'r') as segments:
+        with open(os.path.abspath('app/data/segments.json'), 'r') as segments:
             pj = json.loads(segments.read())
             return json.dumps(pj)
     except Exception as e:
