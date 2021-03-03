@@ -195,71 +195,87 @@ class segmentation_module:
     # views: the user views to match against
     def get_url_score(self, segment, views):
         matches = []
-        count = 0
 
         for url in segment['urls']:
             if url['exact'] == False:
                 try:
-                    matches += [v for v in views if url['match'].lower() in v['Link'].lower()]
-                    count = len(matches) * url['weight']
+                    new_selection = [v for v in views if url['match'].lower() in v['Link'].lower()]
+
+                    for item in new_selection:
+                        item['weight'] = url['weight']
+
+                    matches += new_selection
                 except Exception as e:
                     print(e)
             else:
                 try:
-                    matches += [v for v in views if url['match'].lower() == v['Link'].lower()]
-                    count = len(matches) * url['weight']
+                    new_selection = [v for v in views if url['match'].lower() == v['Link'].lower()]
+
+                    for item in new_selection:
+                        item['weight'] = url['weight']
+
+                    matches += new_selection
                 except Exception as e:
                     print(e)
 
-        return {'segment': segment['name'], 'count': count, 'matches': matches}
+        return {'segment': segment['name'], 'count': sum(m['weight'] for m in matches), 'matches': matches}
 
     # get_cta_score: count all cta matches between user data and segment
     # segment: the segment to match against
     # ctas: the user ctas to match against
     def get_cta_score(self, segment, ctas):
         matches = []
-        count = 0
 
         for cta in segment['ctas']:
             try:
-                matches += [c for c in ctas if cta['target'] in c['Target'] and cta['origin'] in c['Origin'] and str(cta['name']).lower() == str(c['Name']).lower()]
-                count = len(matches) * cta['weight']
+                new_selection = [c for c in ctas if cta['target'] in c['Target'] and cta['origin'] in c['Origin'] and str(cta['name']).lower() == str(c['Name']).lower()]
+
+                for item in new_selection:
+                    item['weight'] = cta['weight']
+
+                matches += new_selection
             except Exception as e:
                 print(e)
 
-        return {'segment': segment['name'], 'count': count, 'matches': matches}
+        return {'segment': segment['name'], 'count': sum(m['weight'] for m in matches), 'matches': matches}
 
     # get_recipe_score: count all recipe matches between user data and segment
     # segment: the segment to match against
     # recipes: the user recipes to match against
     def get_recipe_score(self, segment, recipes):
         matches = []
-        count = 0
 
         for recipe in segment['recipeSearches']:
             try:
-                matches += [r for r in recipes if recipe['searchTerm'].lower() in str(r['SearchTerm']).lower()]
-                count = len(matches) * recipe['weight']
+                new_selection = [r for r in recipes if recipe['searchTerm'].lower() in str(r['SearchTerm']).lower()]
+
+                for item in new_selection:
+                    item['weight'] = recipe['weight']
+
+                matches += new_selection
             except Exception as e:
                 print(e)
 
-        return {'segment': segment['name'], 'count': count, 'matches': matches}
+        return {'segment': segment['name'], 'count': sum(m['weight'] for m in matches), 'matches': matches}
 
     # get_center_score: count all center matches between user data and segment
     # segment: the segment to match against
     # centers: the user centers to match against
     def get_center_score(self, segment, centers):
         matches = []
-        count = 0
 
         for center in segment['centerSearches']:
             try:
-                matches += [c for c in centers if int(center['modality']) == int(c['Modality'])]
-                count = len(matches) * center['weight']
+                new_selection = [c for c in centers if int(center['modality']) == int(c['Modality'])]
+
+                for item in new_selection:
+                    item['weight'] = center['weight']
+
+                matches += new_selection
             except Exception as e:
                 print(e)
 
-        return {'segment': segment['name'], 'count': count, 'matches': matches}
+        return {'segment': segment['name'], 'count': sum(m['weight'] for m in matches), 'matches': matches}
 
     # get_url_events: count all url matches between user data and segment
     # segment: the segment to match against
