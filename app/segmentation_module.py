@@ -2,7 +2,7 @@ import os
 import json
 import pandas
 
-df = pandas.read_csv(os.path.abspath('app/data/userevents.csv'))
+df = pandas.read_csv(os.path.abspath('app/data/userevents.csv'), engine='python')
 df.fillna(0, inplace=True)
 
 class segmentation_module:
@@ -182,10 +182,10 @@ class segmentation_module:
             print(e)
 
         return {
-            'ctas': ctas,
-            'pageViews': page_views,
-            'centerSearches': center_searches,
-            'recipeSearches': recipe_searches
+            'ctas': sorted(ctas, key=lambda c: c['Date']),
+            'pageViews': sorted(page_views, key=lambda p: p['Date']),
+            'centerSearches': sorted(center_searches, key=lambda c: c['Date']),
+            'recipeSearches': sorted(recipe_searches, key=lambda r: r['Date'])
         }
 
     ## Utility Functions ##

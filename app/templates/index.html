@@ -307,7 +307,7 @@
       <p v-if="outputLoadingError">~outputLoadingError~</p>
       <div v-if="summaryStats" class="summary-stats">
         <div style="margin-bottom: 5px;" v-for="key in Object.keys(summaryStats)">
-          ~key~: <div v-bind:style="{backgroundColor:`${getSegmentColor(key)}`}" class="segment-indicator">~summaryStats[key]~</div> matched
+          ~key~: <div v-bind:style="{backgroundColor:`${getSegmentColor(key)}`}" class="segment-indicator">~summaryStats[key]~</div> matched out of <span>~output.length~</span>
         </div>
       </div>
       <div class="output-item" v-if="output.length" v-for="user in currentSelection">
