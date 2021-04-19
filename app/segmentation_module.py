@@ -35,6 +35,7 @@ class segmentation_module:
                 elif m['count'] > 0:
                     top_segments[m['segment']] = m['count']
         except Exception as e:
+            print('here')
             print(e)
 
         # count ctas
