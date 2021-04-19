@@ -1,2 +1,3 @@
 app/data/segments-*
 app/data/*.csv
+app/__pycache__/*.pyc
